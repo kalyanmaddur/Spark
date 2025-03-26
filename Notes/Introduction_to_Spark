@@ -1,0 +1,45 @@
+Introduction to Spark
+
+Apache Spark is a general purpose in-memory compute engine.
+
+Generally Hadoop Provides 3 things :
+  1.HDFS                - Storeage
+  2.Computation         - MapReduce
+  3.Resource Mangement  - YARN
+
+Spark can be coupled with Hadoop.Spark is a alternative to MapReduce, it does not replace hadoop.
+
+Spark can be used with differnt storage and resource management systems.
+  Storage            - Local Storage,HDFS,Amazon S3.
+  Resource Mangement - YARN,Mesos,Kebernetes.
+
+A MapReduce(MR) job requires multiples Disk I/O's when processing the data as the intermediate result/output is saved into Disk, read again from the disk to process further and the final output
+is stored into the disk.
+For a single MR job we require 2 Disk Operation:
+  1.Reading
+  2.Writing
+No of Disl I/O's required = 2n ( n = no of MR jobs)
+
+Incase of Spark only 2 (ideally) Disk I/O's are required cause the intermediate result is saved in in-memory which can be accessed without any additional Disk I/O's.
+Due to because of multiple Disk I/O's, MapReduce has high latency than Spark.
+Spark is 10 to 100 times faster than MapReduce.
+
+Spark is used as general purpose as it can handle :
+  1. Data cleaning
+  2. Data warehousing
+  3. Data ingestion
+where as in Hadoop we require multiple tools for each operation.
+  1. Apache Pig    - Data cleaning
+  2. Apache Hive   - Data warehousing
+  3. Apache Sqoop  -  Data ingestion
+  4. Apache Mahout - Machine learning 
+
+Spark is written in Scala, but can also used with other programming languages.
+  1.Scala
+  2.Java
+  3.Python  - Used for Machine Learning.  
+  4.R       - Used for Data science.
+
+Spark with Scala is generally faster than Python and R.
+
+
