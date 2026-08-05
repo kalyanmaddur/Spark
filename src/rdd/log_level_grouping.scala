@@ -21,6 +21,13 @@ object log_level_grouping extends App {
     (fields(0),fields(1))
   })
   
+  /*
+   * println("groupByKey -- "+ mappedRdd.groupByKey.collect())
+   * println("reduceByKey -- "+ mappedRdd.reduceByKey.collect())
+   * 
+   *  Here collect() returns the Array[(String, Iterable[String])]  where string is the key and the iterable[string] is the values associated with the key
+   */
+  
   mappedRdd.groupByKey.collect().foreach(x => println(x._1,x._2.size))
   
   mappedRdd.reduceByKey(_+_).collect.foreach(x => println(x._1,x._2.size))

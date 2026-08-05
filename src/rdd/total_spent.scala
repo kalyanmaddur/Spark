@@ -15,13 +15,22 @@ object total_spent extends App{
   val input = sc.textFile("file:///C:/Users/DELL/workspace/Spark/datasets/customers-orders.csv")
   
   val split_data = input.map(x => (x.split(",")(0).toInt,x.split(",")(2).toFloat))
-  //val split_data  = input .map(x => (x.split(",")(0)(2)))
   
-  val total = split_data.reduceByKey( (x,y) => (x+y))
+  //split once and reuse 
+  /*
+   * val split_data  = input .map(x => 
+    {	
+    val ele = x.split(",")
+    (ele(0).toInt,ele(2).toFloat) 
+    })
+   * 
+   */
+  
+  val total = split_data.reduceByKey((x,y) => (x+y))
   
   val result = total.sortBy(x => x._2) // sortBy(_._2)
   
-  total.collect.foreach(println)
+  result.collect.foreach(println)
   
 
 }

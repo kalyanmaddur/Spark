@@ -24,7 +24,7 @@ object keyword_amount extends App  {
   val finalmapped = words.map( x => (x._2.toLowerCase(),x._1))
   //((big,24.06),(data,24.06),(contents,24.06))
   
-  val total = finalmapped.reduceByKey( (x,y) => (x+y))
+  val total = finalmapped.reduceByKey( (x,y) => (x+y)) // reduceByKey(_+_)
   //(big,48.26)
   //(data,36.12)
   

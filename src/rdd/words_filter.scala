@@ -1,5 +1,7 @@
 // No : 9
 
+// filtering words from a file using broadcasting
+
 package rdd
 
 import org.apache.log4j.Level
@@ -13,7 +15,7 @@ import scala.io.Source
 object words_filter extends App {
   
   
-   def filteredWords():Set[String] = {
+   def filteredWords():Set[String] = {//creating a new func in scala
    
    var words:Set[String] = Set() // initializing an empty set
    val lines = Source.fromFile("/Users/DELL/workspace/Spark/datasets/boring_words.txt").getLines()

@@ -6,19 +6,21 @@ import org.apache.log4j.Level
 import org.apache.log4j.Logger
 import org.apache.spark.SparkContext
 
-object top_words_in_file extends App {
+object top_words_in_file extends App {  
+  
+  //App trait is used instead of main method, No explicit main method is needed.Instead, the whole class body becomes the “main method”.
   
   Logger.getLogger("org").setLevel(Level.ERROR)
   
   val sc = new SparkContext("local[*]","top")
   
-  val input = sc.textFile("file:///C:/Users/DELL/words.txt")
+  val input = sc.textFile("file:///C:/Users/DELL/workspace/Spark/datasets/words.txt")
   
-  val words = input.flatMap(x => x.split(" ")) // flatmap(_,.split(" ")) -- placeholder syntax
+  val words = input.flatMap(x => x.split(" ")) // flatmap(_.split(" ")) -- placeholder syntax
   
-  val words_lower = words.map(x => x.toLowerCase()) //map o/p is tuple
+  val words_lower = words.map(x => x.toLowerCase()) //map(_.toLowerCase()) 
   
-  val words_count  = words_lower.map(x => (x,1))
+  val words_count  = words_lower.map(x => (x,1)) //map((_,1)) -- O/P is Pair RDD
   
   val final_count = words_count.reduceByKey((x,y) => x+y)
   
@@ -26,14 +28,14 @@ object top_words_in_file extends App {
   final_count.collect.foreach(println)
   
   
-  val exchange_keys_and_values = final_count.map(x => (x._2,x._1)) // exchanging keys and value postions for sorting by value
-  val words_sort = exchange_keys_and_values.sortByKey(false) // sorting by key, by default sorting is ascending, (false) is desceding order
+  val exchange_keys_and_values = final_count.map(x => (x._2,x._1)) // exchanging keys and value positions for sorting by value
+  val words_sort = exchange_keys_and_values.sortByKey(false) // sorting by key, by default sorting is ascending, (false) is descending order
   
   val original_keys_and_values = words_sort.map(x => (x._2,x._1))
   
   /*
-   * insted of exchange the key, value postions and perform sorting using sortByKey 
-   * we can directly sort on the column this eradicates the data shuffle in previous method
+   * instead of exchanging the key, value positions and perform sorting using sortByKey 
+   * we can directly sort on the column, this eradicates the data shuffle in previous method
    *  val words_sort = exchange_keys_and_values.sortBy(x => x._2)
    *  this sorts directly on value 
    */
@@ -45,6 +47,12 @@ object top_words_in_file extends App {
     val word = result._1
     val count = result._2
     println(s"$word : $count")
+    
+    /*
+     * sortByKey performs sort only on key
+     * sortBy perform sort on whole record
+     * 
+     */
     
     
   }

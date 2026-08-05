@@ -16,6 +16,7 @@ object ratings_calculator extends App{
   
   val split = input.map(x => x.split("\t")(2))
   
+  //1
   val ratings = split.map((_,1)) // .map(x => (x,1))
   val ratings_count = ratings.reduceByKey( (x,y) => x+y) // .reduceByKey(_+_)
   
@@ -27,6 +28,7 @@ object ratings_calculator extends App{
   println("ratings --- no of movies")
   ratings_count.collect.foreach(println)
   
+  //2
   println("result of countbyvalue")
   split.countByValue.foreach(println)
 }

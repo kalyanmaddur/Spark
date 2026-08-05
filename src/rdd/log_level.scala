@@ -36,9 +36,14 @@ object log_level extends App {
   
   finalrdd.collect().foreach(println)
   
-  /*
+  /* same code with function chaining
+   * 
    * sc.parallelize(list).map(x => (x.split(":")(0),1)).
    * reduceByKey(_+_).collect().foreach(println)
    */
+  
+  //ReduceByKey vs Reduce
+  
+  
   
 }
