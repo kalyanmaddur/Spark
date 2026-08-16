@@ -1,1 +1,16 @@
 /bin/
+.cache-main
+*.iml
+.classpath
+.project
+.settings/
+.spyproject/
+*.ini
+*.bak
+
+# Spark and Hadoop Output Files
+*.crc
+*._SUCCESS*
+*_SUCCESS*
+_SUCCESS
+part-*
