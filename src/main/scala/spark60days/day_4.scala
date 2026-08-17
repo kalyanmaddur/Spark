@@ -1,16 +1,14 @@
 package spark60days
 
-import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.SaveMode
+import org.apache.spark.sql.{SaveMode, SparkSession}
 
 object day_4 {
   
   //Repartition() vs Coalesce() in Spark
-  def main(args:Array[String]) : Unit = {
-    
+  def main(args:Array[String]) = {
+
     val spark = SparkSession.builder().master("local[*]").appName("day_4").getOrCreate()
     val sc = spark.sparkContext.setLogLevel("ERROR")
-    
     import spark.implicits._
     val DF = spark.sparkContext.parallelize(Range(0,18),3).toDF()
     DF.show(false)
@@ -26,18 +24,18 @@ object day_4 {
     println(s"No of partitions in repartitionDF ${repartitionDF.rdd.getNumPartitions}") //output:6
     repartitionDF.write.mode(SaveMode.Overwrite).csv("C:/Users/DELL/workspace/Spark/datasets/repartitionDF")
     /*partition1 => 1,10,13
-     *partition1 => 3,6,15 
+     *partition1 => 3,6,15
      *partition1 => 0,8,16
      *partition1 => 5,9,17
      *partition1 => 2,11,12
-     *partition1 => 4,7,14     
+     *partition1 => 4,7,14
      */
     //Using coalesce to 2 partitions
     val coalesceDF = DF.coalesce(2)
     println(s"No of partitions in coalesceDF ${coalesceDF.rdd.getNumPartitions}")//output:2
     coalesceDF.write.mode(SaveMode.Overwrite).csv("C:/Users/DELL/workspace/Spark/datasets/coalesceDF")
     /*partition1 => 0,1,2,3,4,5
-     *partition2 => 6,7,8,9,10,11,12,13,14,15,16,17 
+     *partition2 => 6,7,8,9,10,11,12,13,14,15,16,17
      */
   }
 }

@@ -2,8 +2,7 @@
 
 package rdd
 
-import org.apache.log4j.Level
-import org.apache.log4j.Logger
+import org.apache.log4j.{Level, Logger}
 import org.apache.spark.SparkContext
 
 object top_words_in_file extends App {  

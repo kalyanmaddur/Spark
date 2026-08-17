@@ -1,7 +1,7 @@
 package dataframe
 
-import org.apache.spark.sql.SparkSession
 import org.apache.spark.SparkConf
+import org.apache.spark.sql.SparkSession
 
 object spark_session extends App {
   
