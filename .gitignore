@@ -7,6 +7,15 @@
 .spyproject/
 *.ini
 *.bak
+*.class
+*.cache
+*.tasty
+target/
+project/target/
+project/build.properties
+.bsp/
+.idea/
+build.sbt
 
 # Spark and Hadoop Output Files
 *.crc
