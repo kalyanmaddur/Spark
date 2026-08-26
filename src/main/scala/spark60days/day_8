@@ -1,0 +1,25 @@
+
+
+Spark speculative execution
+*********************************
+🔑 The Speculative task in Apache Spark is task that runs slower than the rest of the task in the job. It is health check process that verifies the task is speculated, meaning the task that runs slower than the median of successfully completed task in the task sheet. Such tasks are submitted to another worker. It runs the new copy in parallel rather than shutting down the slow task.
+
+🔑 In the cluster deployment mode, the thread starts as TaskSchedulerImp1with spark.speculation enabled. It executes periodically every spark.speculation.interval after the initial spark.speculation.interval passes.
+
+For the low level details of how that works, there are 4 configuration values controlling this behaviour:
+📌 spark.speculation : Boolean flag to control whether speculative execution is enabled or not. It’s default value is false (at least for v 2.4.4)
+📌 spark.speculation.interval: Copying the docs , it’s how often Spark will check for tasks to speculate.
+📌 spark.speculation.multiplier: It’s a number and should be greater than one. It’s how many times a task duration is larger than the median of the duration of other completed tasks for spark to pick it for re-submission
+📌 spark.speculation.quantile: Percentage of tasks completed after which Spark will start to apply speculative execution.
+
+❌ Speculative execution is not a silver bullet to solve any performance issues in your applications. For example, if there is data skewness and one of the tasks is loaded with too much input data while the other are not then there will be no value in using speculative execution. It may actually make things worse.
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+Spark Property                  |  Default Value    |   Description
+-------------------------------------------------------------------------------------------------------------------------------------------------
+spark.speculation               |   false           |   Enables (true) or disables (false) speculative execution of tasks
+spark.speculation.interval      |   100ms           |   The time interval to use before checking for speculative tasks
+spark.speculation.multiplier    |   1.5             |   How many times slower a task is than the median to be speculation
+spark.speculation.quantile      |   0.75            |   The percentage of tasks that has not finished yet at which to start speculation
+-------------------------------------------------------------------------------------------------------------------------------------------------

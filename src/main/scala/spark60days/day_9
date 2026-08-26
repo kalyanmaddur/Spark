@@ -1,0 +1,41 @@
+
+
+**********************************
+Persistence in Apache Spark
+*********************************
+⏩ One of the most important capabilities in Spark is persisting (or caching) a dataset in memory across operations. When you persist an RDD, each node stores any partitions of it that it computes in memory and reuses them in other actions on that dataset (or datasets derived from it). This allows future actions to be much faster (often by more than 10x). Caching is a key tool for iterative algorithms and fast interactive use.
+
+⏩You can mark an RDD to be persisted using the persist() or cache() methods on it. The first time it is computed in an action, it will be kept in memory on the nodes. Spark’s cache is fault-tolerant – if any partition of an RDD is lost, it will automatically be recomputed using the transformations that originally created it.
+
+⏩In addition, each persisted RDD can be stored using a different storage level, allowing you, for example, to persist the dataset on disk, persist it in memory but as serialized Java objects (to save space), replicate it across nodes. These levels are set by passing a StorageLevel object (Scala, Java, Python) to persist(). The cache() method is a shorthand for using the default storage level, which is StorageLevel.MEMORY_ONLY (store deserialized objects in memory). The full set of storage levels is:
+
+
+📍 Which Storage Level to Choose?
+
+📌 Spark’s storage levels are meant to provide different trade-offs between memory usage and CPU efficiency. We recommend going through the following process to select one:
+
+📌If your RDDs fit comfortably with the default storage level (MEMORY_ONLY), leave them that way. This is the most CPU-efficient option, allowing operations on the RDDs to run as fast as possible.
+
+📌If not, try using MEMORY_ONLY_SER and selecting a fast serialization library to make the objects much more space-efficient, but still reasonably fast to access. (Java and Scala)
+
+Don’t spill to disk unless the functions that computed your datasets are expensive, or they filter a large amount of the data. Otherwise, recomputing a partition may be as fast as reading it from disk.
+
+Use the replicated storage levels if you want fast fault recovery (e.g. if using Spark to serve requests from a web application). All the storage levels provide full fault tolerance by recomputing lost data, but the replicated ones let you continue running tasks on the RDD without waiting to recompute a lost partition.
+
+📌The cache() method is actually using the default storage level, which is
+StorageLevel.MEMORY_ONLY for RDD and MEMORY_AND_DISK` for DataSet(store deserialized objects in memory).
+
+i.e. cache() method is same as persist with default storage level.
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Storage Level                           |       Meaning
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+MEMORY_ONLY                             |   Store RDD as deserialized Java objects in the JVM. If the RDD does not fit in memory,some partitions will not be cached and will be recomputed on the fly each time they are needed. This is the default level.
+MEMORY_AND_DISK                         |   Store RDD as deserialized Java objects in the JVM. If the RDD does not fit in memory, store the partitions that don't fit n disk, and read them from there when they are needed
+MEMORY_ONLY_SER (Java & Scala)          |   Store RDD as serialized Java objects (one byte array per partition). This is generally more space-efficient than deserialized objects, especially when using fast serializer, but more CPU-intensive to read.
+MEMORY_AND_DISK_SER (Java & Scala)      |   Similar to MEMORY_ONLY_SER, but spill partitions that don't fit in memory to disk instead of recomputing them on the fly each time they are needed.
+DISK_ONLY                               |   Store the RDD partitions only on disk.
+MEMORY_ONLY_2,MEMORY_AND_DISK_2,etc     |   Same as level above, but replicate each partition on two cluster nodes.
+OFF_HEAP (experimental)                 |   Similar to MEMORY_ONLY_SER, but store the data in off-heap memory. This requires off-heap memory to be enabled
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
