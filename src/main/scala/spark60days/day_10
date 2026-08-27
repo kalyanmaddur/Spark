@@ -1,0 +1,49 @@
+-------------------------------------------------------
+Apache Spark Web UI - Understanding Spark Execution
+--------------------------------------------------------
+If you are running the Spark application locally, Spark UI can be accessed using the Spark UI  by default runs on port 4040 and below are some of the additional UI’s port that would be helpful to track Spark application.
+Spark Application : 4040
+Resource Manager: 9870
+Spark JobTracker: 8088
+Node Specific Info: 8042
+
+---------------------------------------------------------
+Jobs
+The Jobs tab displays a summary page of all jobs in the Spark application and a details page for each job. The summary page shows high-level information, such as the status, duration, and progress of all jobs and the overall event timeline. When you click on a job on the summary page, you see the details page for that job. The details page further shows the event timeline, DAG visualization, and all stages of the job.
+
+No. of jobs :
+The number of Spark jobs is equal to the number of actions in the application and each Spark job should have at least one Stage.
+
+----------------------------------------------------------
+Stages
+The Stages tab displays a summary page that shows the current state of all stages of all jobs in the Spark application.
+
+At the beginning of the page is the summary with the count of all stages by status (active, pending, completed, skipped, and failed)
+
+No. of stages in DAG :
+Each Wide Transformation results in a separate Number of Stages.
+
+No. of tasks :
+Depends on number of 'partitions' in rdd, which inturn depending on size of the input file and default block size.
+Default storage size of blocks in HDFS is 128mb and local is 32mb
+
+-----------------------------------------------------------
+Storage
+The Storage tab displays the persisted RDDs and DataFrames, if any, in the application. The summary page shows the storage levels, sizes and partitions of all RDDs, and the details page shows the sizes and using executors for all partitions in an RDD or DataFrame.
+
+-----------------------------------------------------------
+Environment
+The Environment tab displays the values for the different environment and configuration variables, including JVM, Spark, and system properties.
+
+-----------------------------------------------------------
+Executors
+The Executors tab displays summary information about the executors that were created for the application, including memory and disk usage and task and shuffle information. The Storage Memory column shows the amount of memory used and reserved for caching data.
+The Executors tab provides not only resource information like amount of memory, disk, and cores used by each executor but also performance information.
+
+-----------------------------------------------------------
+SQL
+If the application executes Spark SQL queries, the SQL tab displays information, such as the duration, jobs, and physical and logical plans for the queries.
+
+-----------------------------------------------------------
+Streaming
+The web UI includes a Streaming tab if the application uses Spark streaming. This tab displays scheduling delay and processing time for each micro-batch in the data stream, which can be useful for troubleshooting the streaming application.

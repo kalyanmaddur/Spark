@@ -1,0 +1,61 @@
+---------------------------------------------------------------
+Apache Spark Window Functions
+----------------------------------------------------------------
+Window aggregate functions (aka window functions or windowed aggregates) are functions that perform a calculation over a group of records called window that are in some relation to the current record (i.e. can be in the same partition or frame as the current row).
+In other words, when executed, a window function computes a value for each and every row in a window.
+Spark SQL supports three kinds of window functions:
+ranking functions, analytic functions and aggregate functions
+
+Examples - 
+
+val myRdd =
+  Seq(("Lisa", "Sales", 10000, 35), ("Evan", "Sales", 32000, 38),
+    ("Fred", "Engineering", 21000, 28), ("Alex", "Sales", 30000, 33),
+    ("Tom", "Engineering", 23000, 33), ("Jane", "Marketing", 29000, 28),
+    ("Jeff", "Marketing", 35000, 38), ("Paul", "Engineering", 29000, 23),
+    ("Chloe", "Engineering", 23000, 25))
+val df = myRdd.toDF("name", "dept", "salary", "age")
+
+-------------------------------------------------------------------
+Spark Window Ranking Functions
+-------------------------------------------------------------------
+
+Rank - rank() window function is used to provide a rank to the result within a window partition. This function leaves gaps in rank when there are ties.
+
+val winSpec = Window.partitionBy("dept").orderBy("salary")
+df.withColumn("rank", rank().over(winSpec)).show(false)
+
+dense_rank- It is used to get the result with rank of rows within a window partition without any gaps. This is similar to rank() function difference being rank function leaves gaps in rank when there are ties.
+
+df.withColumn("Dense Rank", dense_rank().over(winSpec)).show(false)
+
+row_number - It is used to give the sequential row number starting from 1 to the result of each window partition.
+
+df.withColumn("rowNo",row_number().over(winSpec))
+
+ntile - It returns the relative rank of result rows within a window partition. In below example we have used 3 as an argument to ntile hence it returns ranking between 3 values (1,2 and 3)
+
+df.withColumn("nTile", ntile(3).over(winSpec)).show()
+ 
+------------------------------------------------------------------------
+Analytics Window Functions
+------------------------------------------------------------------------
+
+cume_dist() window function is used to get the cumulative distribution of values within a window partition. This is the same as the DENSE_RANK function in SQL.
+lag() window function is the same as the LAG function in SQL.
+lead() window function is the same as the LEAD function in SQL.
+
+df.withColumn("lag", lag(df.col("salary"), 1).over(winSpec))
+ .withColumn("lead", lead(df.col("salary"), 1).over(winSpec))
+ .withColumn("cumm_dist", cume_dist().over(winSpec)).show(false)
+ 
+------------------------------------------------------------------------
+Aggregates Window Functions
+------------------------------------------------------------------------
+
+val windowDept = Window.partitionBy("dept")
+val AggregateDf = df.withColumn("salaries",collect_list('salary) over windowDept)
+  .withColumn("avg salary",avg('salary).over(windowDept))
+  .withColumn("sum salary",sum('salary).over(windowDept))
+  .withColumn("max salary",max('salary).over(windowDept))
+  .withColumn("min salary",min('salary).over(windowDept))
